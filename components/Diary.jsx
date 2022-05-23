@@ -99,9 +99,6 @@ const Styled = {
     justify-content: center;
     align-items: center;
   `,
-  ScrollWrapper: styled.ScrollView`
-    flex: 1;
-  `,
   ImageButton: styled.TouchableOpacity`
     width: 100;
     height: 50;
