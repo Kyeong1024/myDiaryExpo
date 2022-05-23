@@ -1,17 +1,20 @@
-import React, { useState } from 'react';
-import { Text, TouchableOpacity } from 'react-native';
-import styled from 'styled-components/native';
-import * as ImagePicker from 'expo-image-picker';
+import React, { useState } from "react";
+import { Text, TouchableOpacity } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as ImagePicker from "expo-image-picker";
 
-export default function Diary() {
-  const [imageUrl, setImageUrl] = useState(null);
-  const [text, setText] = useState('');
+import styled from "styled-components/native";
+
+export default function Diary({ navigation, route }) {
+  const [diaryInfo, setDiaryInfo] = useState({ content: "", imageUrl: "" });
 
   const openImagePicker = async () => {
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    
+    const permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+
     if (!permissionResult.granted) {
-      alert('Please allow permission!');
+      alert("Please allow permission!");
 
       return;
     }
@@ -20,46 +23,73 @@ export default function Diary() {
 
     if (pickerResult.cancelled) return;
 
-    setImageUrl(pickerResult.uri);
+    setDiaryInfo({
+      ...diaryInfo,
+      imageUrl: pickerResult.uri,
+    });
   };
 
   const deleteImage = () => {
-    setImageUrl(null);
+    setDiaryInfo({
+      ...diaryInfo,
+      imageUrl: null,
+    });
   };
 
   const handleChangeText = (txt) => {
-    setText(txt);
-  }
+    setDiaryInfo({
+      ...diaryInfo,
+      content: txt,
+    });
+  };
+
+  const saveDiaryData = async () => {
+    alert("saved");
+
+    try {
+      let diaryData = JSON.parse(await AsyncStorage.getItem("Diary-data"));
+
+      if (!diaryData) {
+        diaryData = [];
+      }
+
+      diaryData.push(diaryInfo);
+
+      await AsyncStorage.setItem("Diary-data", JSON.stringify(diaryData));
+    } catch (err) {
+      console.error(err);
+    }
+
+    navigation.reset({ index: 0, routes: [{ name: "Home" }] });
+  };
 
   return (
-    <Styled.Container>
-      {imageUrl ? (
-        <>
-          <TouchableOpacity
-            onPress={deleteImage}>
-            <Text>사진 지우기</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={openImagePicker}>
-            <Styled.DiaryImage source={{uri: imageUrl}}/>
-          </TouchableOpacity>
-        </>
-      ) : (      
-        <Styled.ImageButton
-          onPress={openImagePicker}>
-          <Text>Image</Text>
-        </Styled.ImageButton>
-      )}
-      <Styled.DiaryInput
-        multiline 
-        onChangeText={handleChangeText}
-        value={text}
-      />
-      <Styled.SaveButton
-        onPress={() => alert('saved')}>
-        <Text>Save</Text>
-      </Styled.SaveButton>
-    </Styled.Container>
+    <SafeAreaView style={{ flex: 1 }}>
+      <Styled.Container>
+        {diaryInfo.imageUrl ? (
+          <>
+            <TouchableOpacity onPress={deleteImage}>
+              <Text>사진 지우기</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={openImagePicker}>
+              <Styled.DiaryImage source={{ uri: diaryInfo.imageUrl }} />
+            </TouchableOpacity>
+          </>
+        ) : (
+          <Styled.ImageButton onPress={openImagePicker}>
+            <Text>Image</Text>
+          </Styled.ImageButton>
+        )}
+        <Styled.DiaryInput
+          multiline
+          onChangeText={handleChangeText}
+          value={diaryInfo.content}
+        />
+        <Styled.SaveButton onPress={saveDiaryData}>
+          <Text>Save</Text>
+        </Styled.SaveButton>
+      </Styled.Container>
+    </SafeAreaView>
   );
 }
 
@@ -68,6 +98,9 @@ const Styled = {
     flex: 1;
     justify-content: center;
     align-items: center;
+  `,
+  ScrollWrapper: styled.ScrollView`
+    flex: 1;
   `,
   ImageButton: styled.TouchableOpacity`
     width: 100;
@@ -95,5 +128,5 @@ const Styled = {
     justify-content: center;
     align-items: center;
     border-radius: 5;
-  `
+  `,
 };
