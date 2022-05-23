@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Text, View, TouchableOpacity, TextInput, Image } from 'react-native';
+import { Text, TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
 import * as ImagePicker from 'expo-image-picker';
 
 export default function Diary() {
   const [imageUrl, setImageUrl] = useState(null);
+  const [text, setText] = useState('');
 
   const openImagePicker = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -26,6 +27,10 @@ export default function Diary() {
     setImageUrl(null);
   };
 
+  const handleChangeText = (txt) => {
+    setText(txt);
+  }
+
   return (
     <Styled.Container>
       {imageUrl ? (
@@ -45,6 +50,11 @@ export default function Diary() {
           <Text>Image</Text>
         </Styled.ImageButton>
       )}
+      <Styled.DiaryInput
+        multiline 
+        onChangeText={handleChangeText}
+        value={text}
+      />
     </Styled.Container>
   );
 }
@@ -62,6 +72,11 @@ const Styled = {
     justify-content: center;
     align-items: center;
     border-radius: 5;
+  `,
+  DiaryInput: styled.TextInput`
+    width: 80%;
+    height: 50%
+    border-width: 1;
   `,
   DiaryImage: styled.Image`
     width: 300;
