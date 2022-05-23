@@ -55,6 +55,10 @@ export default function Diary() {
         onChangeText={handleChangeText}
         value={text}
       />
+      <Styled.SaveButton
+        onPress={() => alert('saved')}>
+        <Text>Save</Text>
+      </Styled.SaveButton>
     </Styled.Container>
   );
 }
@@ -83,5 +87,13 @@ const Styled = {
     height: 300;
     resize-mode: contain;
     border-width: 1;
+  `,
+  SaveButton: styled.TouchableOpacity`
+    width: 80%;
+    height: 50;
+    border-width: 1;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5;
   `
 };
