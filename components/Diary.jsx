@@ -56,6 +56,8 @@ export default function Diary({ navigation, route }) {
       diaryData.push(diaryInfo);
 
       await AsyncStorage.setItem("Diary-data", JSON.stringify(diaryData));
+
+      return;
     } catch (err) {
       console.error(err);
     }
