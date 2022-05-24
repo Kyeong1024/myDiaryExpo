@@ -11,16 +11,22 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <NavigationContainer>
-        <Tab.Navigator>
+        <Tab.Navigator tabBarOptions={{ labelStyle: { fontSize: 20 } }}>
           <Tab.Screen
             name="Home"
             component={Home}
-            options={{ headerShown: false }}
+            options={{
+              headerShown: false,
+              tabBarIcon: () => null,
+            }}
           />
           <Tab.Screen
             name="Diary"
             component={Diary}
-            options={{ headerShown: false }}
+            options={{
+              headerShown: false,
+              tabBarIcon: () => null,
+            }}
           />
         </Tab.Navigator>
       </NavigationContainer>
