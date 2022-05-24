@@ -2,12 +2,17 @@ import React, { useState } from "react";
 import { Text, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import * as ImagePicker from "expo-image-picker";
 
 import styled from "styled-components/native";
 
 export default function Diary({ navigation, route }) {
-  const [diaryInfo, setDiaryInfo] = useState({ content: "", imageUrl: "" });
+  const [diaryInfo, setDiaryInfo] = useState({
+    content: "",
+    imageUrl: "",
+    date: "",
+  });
 
   const openImagePicker = async () => {
     const permissionResult =
@@ -26,6 +31,8 @@ export default function Diary({ navigation, route }) {
     setDiaryInfo({
       ...diaryInfo,
       imageUrl: pickerResult.uri,
+      date: new Date().toLocaleDateString(),
+      id: new Date().getTime(),
     });
   };
 
@@ -44,7 +51,10 @@ export default function Diary({ navigation, route }) {
   };
 
   const saveDiaryData = async () => {
-    alert("saved");
+    if (!diaryInfo.content || !diaryInfo.imageUrl) {
+      alert("사진과 내용 모두 적어주세요.");
+      return;
+    }
 
     try {
       let diaryData = JSON.parse(await AsyncStorage.getItem("Diary-data"));
@@ -56,8 +66,6 @@ export default function Diary({ navigation, route }) {
       diaryData.push(diaryInfo);
 
       await AsyncStorage.setItem("Diary-data", JSON.stringify(diaryData));
-
-      return;
     } catch (err) {
       console.error(err);
     }
@@ -102,30 +110,33 @@ const Styled = {
     align-items: center;
   `,
   ImageButton: styled.TouchableOpacity`
-    width: 100;
-    height: 50;
-    border-width: 1;
+    width: 100px;
+    height: 50px;
+    border-width: 1px;
     justify-content: center;
     align-items: center;
-    border-radius: 5;
+    border-radius: 5px;
   `,
   DiaryInput: styled.TextInput`
     width: 80%;
     height: 50%
-    border-width: 1;
+    border-width: 1px;
+    border-radius: 5px;
+    margin-top: 5px;
+    padding: 10px;
   `,
   DiaryImage: styled.Image`
-    width: 300;
-    height: 300;
-    resize-mode: contain;
-    border-width: 1;
+    width: 300px;
+    height: 200px;
+    resize-mode: cover;
   `,
   SaveButton: styled.TouchableOpacity`
     width: 80%;
-    height: 50;
-    border-width: 1;
+    height: 50px;
+    margin-top: 5px;
+    border-width: 1px;
     justify-content: center;
     align-items: center;
-    border-radius: 5;
+    border-radius: 5px;
   `,
 };
