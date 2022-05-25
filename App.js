@@ -11,7 +11,13 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <NavigationContainer>
-        <Tab.Navigator tabBarOptions={{ labelStyle: { fontSize: 20 } }}>
+        <Tab.Navigator
+          screenOptions={() => ({
+            tabBarLabelStyle: {
+              fontSize: 20,
+            },
+          })}
+        >
           <Tab.Screen
             name="Home"
             component={Home}
