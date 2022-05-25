@@ -7,6 +7,8 @@
     "start": "expo start",
     "build:android": "eas build --platform android --profile local",
     "build:ios": "eas build --platform ios --profile local",
+    "build:device:android": "eas build --platform android --profile local:device",
+    "build:device:ios": "eas build --platform ios --profile local:device",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",

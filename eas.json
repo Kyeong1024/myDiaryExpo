@@ -9,6 +9,10 @@
         "buildType": "apk"
       }
     },
+    "local:device": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
     "development": {
       "developmentClient": true,
       "distribution": "internal"
