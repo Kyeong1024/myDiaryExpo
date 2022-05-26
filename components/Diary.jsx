@@ -57,11 +57,8 @@ export default function Diary({ navigation, route }) {
     }
 
     try {
-      let diaryData = JSON.parse(await AsyncStorage.getItem("Diary-data"));
-
-      if (!diaryData) {
-        diaryData = [];
-      }
+      const diaryData =
+        JSON.parse(await AsyncStorage.getItem("Diary-data")) || [];
 
       diaryData.push(diaryInfo);
 
